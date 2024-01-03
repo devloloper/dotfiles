@@ -1,0 +1,123 @@
+{
+	"layer": "top",
+	"position": "bottom",
+
+	"modules-left": [
+		"hyprland/workspaces",
+		"custom/right-arrow-dark"
+	],
+	"modules-center": [
+		"hyprland/window"
+	],
+	"modules-right": [
+		"custom/left-arrow-dark",
+                "clock#1",
+                "custom/left-arrow-light",
+                "custom/left-arrow-dark",
+                "clock#2",
+                "custom/left-arrow-light",
+                "custom/left-arrow-dark",
+                "clock#3",
+                "custom/left-arrow-light",
+		"custom/left-arrow-dark",
+		"wireplumber",
+		"custom/left-arrow-light",
+		"custom/left-arrow-dark",
+		"memory",
+		"custom/left-arrow-light",
+		"custom/left-arrow-dark",
+		"cpu",
+		"custom/left-arrow-light",
+		"custom/left-arrow-dark",
+		"disk",
+		"custom/left-arrow-light",
+		"custom/left-arrow-dark",
+		"battery#1",
+		"custom/left-arrow-light",
+		"custom/left-arrow-dark",
+		"battery#2",
+		"custom/left-arrow-light",
+		"custom/left-arrow-dark",
+		"tray"
+	],
+
+	"custom/left-arrow-dark": {
+		"format": "",
+		"tooltip": false
+	},
+	"custom/left-arrow-light": {
+		"format": "",
+		"tooltip": false
+	},
+	"custom/right-arrow-dark": {
+		"format": "",
+		"tooltip": false
+	},
+	"custom/right-arrow-light": {
+		"format": "",
+		"tooltip": false
+	},
+
+	"sway/workspaces": {
+		"disable-scroll": true,
+		"format": "{name}"
+	},
+
+	"clock#1": {
+		"format": "{:%a}",
+		"tooltip": false
+	},
+	"clock#2": {
+		"format": "{:%H:%M}",
+		"tooltip": false
+	},
+	"clock#3": {
+		"format": "{:%m-%d}",
+		"tooltip": false
+	},
+
+	"memory": {
+		"interval": 5,
+		"format": "Mem {}%"
+	},
+	"cpu": {
+		"interval": 5,
+		"format": "CPU {usage:2}%"
+	},
+	"disk": {
+		"interval": 5,
+		"format": "Disk {percentage_used:2}%",
+		"path": "/"
+	},
+	"battery#1": {
+		"bat": "battery_hidpp_battery_1",
+		"interval": 60,
+		"states": {
+			"warning": 30,
+			"critical": 15
+    		},
+    		"format": "{capacity}% {icon}",
+		"format-icons": ["", "", "", "", ""],
+		"max-length": 25
+	},
+	"battery#2": {
+		"bat": "ups_hiddev5",
+		"interval": 60,
+		"states": {
+			"warning": 30,
+			"critical": 15
+    		},
+    		"format": "{capacity}% {icon}",
+		"format-icons": ["", "", "", "", ""],
+		"max-length": 25
+	},
+	"wireplumber": {
+		"format": "{volume}% {icon}",
+		"format-muted": "",
+		"on-click": "helvum",
+		"format-icons": ["", "", ""]
+	},
+	"tray": {
+		"icon-size": 20
+	}
+}
