@@ -1,5 +1,8 @@
 if status is-interactive
     # Commands to run in interactive sessions can go here
+    if uwsm check may-start
+        exec uwsm start hyprland
+    end
 end
 
 # Add ssh key to keyring
@@ -15,3 +18,5 @@ set -gx GITHUB_USERNAME devloloper
 string match -q "$TERM_PROGRAM" "vscode"
 and . (code --locate-shell-integration-path fish)
 fish_add_path -aP /opt/rocm/bin
+
+pyenv init - | source
