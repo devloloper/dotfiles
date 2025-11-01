@@ -7,3 +7,5 @@ export __GLX_VENDOR_LIBRARY_NAME=nvidia
 export ELECTRON_OZONE_PLATFORM_HINT=auto
 export NVD_BACKEND=direct
 export MOZ_DISABLE_RDD_SANDBOX=1
+export XDG_SESSION_TYPE=wayland
+export GBM_BACKEND=nvidia-drm

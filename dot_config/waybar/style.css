@@ -1,11 +1,13 @@
+@import url("~/.cache/wal/colors-wal.css");
+
 * {
 	font-size: 20px;
 	font-family: monospace;
 }
 
 window#waybar {
-	background: #292b2e;
-	color: #fdf6e3;
+	background: @background;
+	color: @foreground;
 }
 
 #custom-right-arrow-dark,

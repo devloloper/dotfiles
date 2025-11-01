@@ -5,6 +5,11 @@ if status is-interactive
     end
 end
 
+# Add .local/bin to PATH if it exists
+if test -d "$HOME/.local/bin"
+    fish_add_path "$HOME/.local/bin"
+end
+
 # Add ssh key to keyring
 set -U SSH_KEYS_TO_AUTOLOAD ~/.ssh/id_ed25519
 
