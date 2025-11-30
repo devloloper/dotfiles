@@ -1,80 +1,186 @@
-@import url("~/.cache/wal/colors-wal.css");
+@import "../../.cache/wal/colors-waybar.css";
 
 * {
-	font-size: 20px;
-	font-family: monospace;
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrainsMono Nerd Font", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    min-height: 0;
 }
 
 window#waybar {
-	background: @background;
-	color: @foreground;
+    background: transparent;
+    color: @foreground;
+    /* opacity: 0.9; */
 }
 
-#custom-right-arrow-dark,
-#custom-left-arrow-dark {
-	color: #1a1a1a;
-}
-#custom-right-arrow-light,
-#custom-left-arrow-light {
-	color: #292b2e;
-	background: #1a1a1a;
+window#waybar.hidden {
+    opacity: 0.2;
 }
 
-#workspaces,
-#clock.1,
-#clock.2,
-#clock.3,
-#pulseaudio,
-#memory,
-#cpu,
-#battery.1,
-#battery.2,
-#disk,
-#tray {
-	background: #1a1a1a;
+#workspaces {
+    background-color: @background;
+    opacity: 0.8;
+    margin: 4px 4px;
+    padding: 0px 5px;
+    border-radius: 16px;
+    border: 1px solid @color4;
 }
 
 #workspaces button {
-	padding: 0 2px;
-	color: #fdf6e3;
-}
-#workspaces button.focused {
-	color: #268bd2;
-}
-#workspaces button:hover {
-	box-shadow: inherit;
-	text-shadow: inherit;
-}
-#workspaces button:hover {
-	background: #1a1a1a;
-	border: #1a1a1a;
-	padding: 0 3px;
+    padding: 0 5px;
+    background-color: transparent;
+    color: @foreground;
+    border-radius: 16px;
 }
 
-#wireplumber {
-	color: #268bd2;
+#workspaces button:hover {
+    background: rgba(0, 0, 0, 0.2);
 }
-#memory {
-	color: #2aa198;
+
+#workspaces button.active {
+    color: @color1;
+    background-color: rgba(0, 0, 0, 0.2);
 }
+
+#workspaces button.urgent {
+    background-color: @color1;
+}
+
+#window {
+    background-color: @background;
+    opacity: 0.8;
+    margin: 4px 4px;
+    padding: 0 10px;
+    border-radius: 16px;
+    color: @foreground;
+    font-weight: bold;
+    border: 1px solid @color4;
+}
+
+#clock {
+    background-color: @background;
+    opacity: 0.8;
+    margin: 4px 4px;
+    padding: 0 15px;
+    border-radius: 16px;
+    font-weight: bold;
+    color: @color5;
+    border: 1px solid @color4;
+}
+
+/* Hardware Group Styling */
+#cpu, #memory, #disk, #custom-gpu, #custom-wattage, #temperature, #custom-fans {
+    background-color: @background;
+    opacity: 0.8;
+    margin: 4px 2px;
+    padding: 0 10px;
+    color: @foreground;
+}
+
 #cpu {
-	color: #6c71c4;
-}
-#battery.1 {
-	color: #859900;
-}
-#battery.2 {
-	color: #859900;
-}
-#disk {
-	color: #b58900;
+    border-radius: 16px 0 0 16px;
+    color: @color2;
+    min-width: 50px;
+    border: 1px solid transparent; /* Reinforce border-radius */
 }
 
-#clock,
-#wireplumber,
-#memory,
-#cpu,
-#battery,
+#memory {
+    color: @color3;
+}
+
 #disk {
-	padding: 0 10px;
+    color: @color6;
+}
+
+#custom-fans {
+    color: @color2;
+}
+
+#custom-gpu {
+    color: @color4;
+    min-width: 160px;
+    font-family: "JetBrainsMono Nerd Font", monospace;
+}
+
+#custom-ups {
+    color: @color5;
+    padding: 0 10px;
+}
+
+/* Peripherals Group Styling (Mimic Hardware Group - Distinct Styles) */
+#battery.mouse, #mouse {
+    background-color: @background;
+    opacity: 0.8;
+    margin: 4px 2px;
+    padding: 0 10px;
+    color: @color3; /* Specific color */
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    border-radius: 16px 0 0 16px; /* Left rounded corners */
+    min-width: 65px;
+    border: 1px solid transparent; /* Reinforce border-radius */
+}
+
+#custom-ups {
+    background-color: @background;
+    opacity: 0.8;
+    margin: 4px 2px;
+    padding: 0 10px;
+    color: @color5; /* Specific color */
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    border-radius: 0 16px 16px 0; /* Right rounded corners */
+    border: 1px solid transparent; /* Reinforce border-radius */
+}
+
+#custom-wattage {
+    color: @color5;
+    min-width: 220px;
+    font-family: "JetBrainsMono Nerd Font", monospace;
+}
+
+#temperature {
+    border-radius: 0 16px 16px 0;
+    color: @color1;
+    margin-right: 10px;
+    border: 1px solid transparent; /* Reinforce border-radius */
+}
+
+/* System Modules */
+#network {
+    background-color: @background;
+    opacity: 0.8;
+    margin: 4px 4px;
+    padding: 0 10px;
+    border-radius: 16px;
+    color: @color6;
+    border: 1px solid @color4;
+    min-width: 180px;
+}
+
+#pulseaudio {
+    background-color: @background;
+    opacity: 0.8;
+    margin: 4px 4px;
+    padding: 0 10px;
+    border-radius: 16px;
+    color: @color2;
+    border: 1px solid @color4;
+    font-family: "JetBrainsMono Nerd Font", monospace;
+}
+
+#tray {
+    background-color: @background;
+    opacity: 0.8;
+    margin: 4px 4px;
+    padding: 0 10px;
+    border-radius: 16px;
+    border: 1px solid @color4;
+}
+
+#custom-power {
+    background-color: @color1;
+    color: @background;
+    margin: 4px 4px;
+    padding: 0 10px;
+    border-radius: 16px;
 }

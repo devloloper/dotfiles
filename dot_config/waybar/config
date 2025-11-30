@@ -1,123 +1,183 @@
 {
-	"layer": "top",
-	"position": "bottom",
+    "layer": "top",
+    "position": "bottom",
+    "height": 36,
+    "spacing": 4,
+    "margin-top": 4,
+    "margin-left": 8,
+    "margin-right": 8,
 
-	"modules-left": [
-		"hyprland/workspaces",
-		"custom/right-arrow-dark"
-	],
-	"modules-center": [
-		"hyprland/window"
-	],
-	"modules-right": [
-		"custom/left-arrow-dark",
-                "clock#1",
-                "custom/left-arrow-light",
-                "custom/left-arrow-dark",
-                "clock#2",
-                "custom/left-arrow-light",
-                "custom/left-arrow-dark",
-                "clock#3",
-                "custom/left-arrow-light",
-		"custom/left-arrow-dark",
-		"wireplumber",
-		"custom/left-arrow-light",
-		"custom/left-arrow-dark",
-		"memory",
-		"custom/left-arrow-light",
-		"custom/left-arrow-dark",
-		"cpu",
-		"custom/left-arrow-light",
-		"custom/left-arrow-dark",
-		"disk",
-		"custom/left-arrow-light",
-		"custom/left-arrow-dark",
-		"battery#1",
-		"custom/left-arrow-light",
-		"custom/left-arrow-dark",
-		"battery#2",
-		"custom/left-arrow-light",
-		"custom/left-arrow-dark",
-		"tray"
-	],
+    "modules-left": [
+        "hyprland/workspaces",
+        "hyprland/window"
+    ],
+    "modules-center": [
+        "clock"
+    ],
+    "modules-right": [
+        "group/hardware",
+        "group/peripherals",
+        "network",
+        "pulseaudio",
+        "tray",
+        "custom/power"
+    ],
 
-	"custom/left-arrow-dark": {
-		"format": "",
-		"tooltip": false
-	},
-	"custom/left-arrow-light": {
-		"format": "",
-		"tooltip": false
-	},
-	"custom/right-arrow-dark": {
-		"format": "",
-		"tooltip": false
-	},
-	"custom/right-arrow-light": {
-		"format": "",
-		"tooltip": false
-	},
+    // Modules configuration
+    "hyprland/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": false,
+        "format": "{icon}",
+        "format-icons": {
+            "1": "1",
+            "2": "2",
+            "3": "3",
+            "4": "4",
+            "5": "5",
+            "6": "6",
+            "7": "7",
+            "8": "8",
+            "9": "9",
+            "10": "10",
+            "default": ""
+        }
+    },
 
-	"sway/workspaces": {
-		"disable-scroll": true,
-		"format": "{name}"
-	},
+    "hyprland/window": {
+        "max-length": 50,
+        "separate-outputs": true
+    },
 
-	"clock#1": {
-		"format": "{:%a}",
-		"tooltip": false
-	},
-	"clock#2": {
-		"format": "{:%H:%M}",
-		"tooltip": false
-	},
-	"clock#3": {
-		"format": "{:%m-%d}",
-		"tooltip": false
-	},
+    "clock": {
+        "format": "{:%H:%M   %a, %b %e}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format-alt": "{:%Y-%m-%d}"
+    },
 
-	"memory": {
-		"interval": 5,
-		"format": "Mem {}%"
-	},
-	"cpu": {
-		"interval": 5,
-		"format": "CPU {usage:2}%"
-	},
-	"disk": {
-		"interval": 5,
-		"format": "Disk {percentage_used:2}%",
-		"path": "/"
-	},
-	"battery#1": {
-		"bat": "battery_hidpp_battery_1",
-		"interval": 60,
-		"states": {
-			"warning": 30,
-			"critical": 15
-    		},
-    		"format": "{capacity}% {icon}",
-		"format-icons": ["", "", "", "", ""],
-		"max-length": 25
-	},
-	"battery#2": {
-		"bat": "ups_hiddev5",
-		"interval": 60,
-		"states": {
-			"warning": 30,
-			"critical": 15
-    		},
-    		"format": "{capacity}% {icon}",
-		"format-icons": ["", "", "", "", ""],
-		"max-length": 25
-	},
-	"wireplumber": {
-		"format": "{volume}% {icon}",
-		"format-muted": "",
-		"on-click": "helvum",
-		"format-icons": ["", "", ""]
-	},
-	"tray": {
-		"icon-size": 20
-	}
+    "group/hardware": {
+        "orientation": "horizontal",
+        "modules": [
+            "cpu",
+            "memory",
+            "disk",
+            "custom/fans",
+            "custom/gpu",
+            "custom/wattage",
+            "temperature"
+        ]
+    },
+
+    "group/peripherals": {
+        "orientation": "horizontal",
+        "modules": [
+            "battery#mouse",
+            "custom/ups"
+        ]
+    },
+
+    "custom/ups": {
+        "exec": "~/.config/waybar/scripts/ups-monitor.sh",
+        "return-type": "json",
+        "format": "{}",
+        "interval": 5,
+        "tooltip": true
+    },
+
+    "custom/fans": {
+        "exec": "~/.config/waybar/scripts/fans.sh",
+        "return-type": "json",
+        "format": "{}",
+        "interval": 2,
+        "tooltip": true
+    },
+
+    "battery#mouse": {
+        "bat": "hidpp_battery_0",
+        "format": "󰍽 {capacity}%",
+        "format-icons": ["", "", "", "", ""],
+        "interval": 60,
+        "tooltip-format": "Mouse Battery: {capacity}%"
+    },
+
+    "disk": {
+        "interval": 30,
+        "format": " {used}/{total}",
+        "path": "/"
+    },
+
+    "cpu": {
+        "format": " {usage:>3}%",
+        "tooltip": false,
+        "interval": 2
+    },
+
+    "memory": {
+        "format": " {used:0.1f}G/{total:0.1f}G",
+        "tooltip-format": "RAM: {used:0.1f}GB / {total:0.1f}GB"
+    },
+
+    "custom/gpu": {
+        "exec": "~/.config/waybar/scripts/gpu.sh",
+        "return-type": "json",
+        "format": "󰍹 {}",
+        "interval": 2,
+        "tooltip": true
+    },
+
+    "custom/wattage": {
+        "exec": "~/.config/waybar/scripts/wattage.sh",
+        "return-type": "json",
+        "format": "{}",
+        "interval": 2,
+        "tooltip": true
+    },
+
+    "temperature": {
+        // "thermal-zone": 2,
+        // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
+        "critical-threshold": 80,
+        "format-critical": " {temperatureC}°C",
+        "format": " {temperatureC}°C",
+        "tooltip": false
+    },
+
+    "network": {
+        // "interface": "wlan0", // (Optional) To force the use of this interface
+        "format-wifi": " {essid} {bandwidthDownBytes}↓ {bandwidthUpBytes}↑",
+        "format-ethernet": "󰈀 {bandwidthDownBytes}↓ {bandwidthUpBytes}↑",
+        "tooltip-format": "{ifname} via {gwaddr}",
+        "format-linked": "{ifname} (No IP)",
+        "format-disconnected": "⚠ Disconnected",
+        "format-alt": "{ifname}: {ipaddr}/{cidr}",
+        "interval": 2
+    },
+
+    "pulseaudio": {
+        // "scroll-step": 1, // %, can be a float
+        "format": " {icon} {volume}%",
+        "format-bluetooth": "{icon} {volume}%",
+        "format-bluetooth-muted": " {icon}",
+        "format-muted": "",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
+        },
+        "on-click": "pavucontrol"
+    },
+
+    "tray": {
+        "icon-size": 21,
+        "spacing": 10
+    },
+
+    "custom/power": {
+        "format": "⏻ ",
+        "tooltip": false,
+        "on-click": "systemctl poweroff"
+    }
 }
