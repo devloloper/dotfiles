@@ -156,7 +156,7 @@
       <Left>0</Left>
       <Top>0</Top>
       <Width>1913</Width>
-      <Height>2012</Height>
+      <Height>2007</Height>
       <PixelsPerInch>96</PixelsPerInch>
       <Maximized>False</Maximized>
       <Splitter>50</Splitter>
@@ -308,26 +308,26 @@
     </StatusBar>
   </Fonts>
   <Colors>
-    <UseCursorBorder>False</UseCursorBorder>
+    <UseCursorBorder>True</UseCursorBorder>
     <CursorBorderColor>-2147483635</CursorBorderColor>
     <UseFrameCursor>False</UseFrameCursor>
-    <Foreground>-2147483640</Foreground>
-    <Background>-2147483643</Background>
-    <Background2>-2147483643</Background2>
-    <Cursor>-2147483635</Cursor>
-    <CursorText>-2147483634</CursorText>
+    <Foreground>12171705</Foreground>
+    <Background>2302755</Background>
+    <Background2>1052688</Background2>
+    <Cursor>5329233</Cursor>
+    <CursorText>-2147483635</CursorText>
     <Mark>255</Mark>
-    <InactiveCursor>-2147483645</InactiveCursor>
+    <InactiveCursor>4605510</InactiveCursor>
     <InactiveMark>128</InactiveMark>
     <UseInvertedSelection>False</UseInvertedSelection>
     <UseInactiveSelColor>False</UseInactiveSelColor>
     <AllowOverColor>True</AllowOverColor>
     <gBorderFrameWidth>1</gBorderFrameWidth>
     <PathLabel>
-      <ActiveColor>-2147483635</ActiveColor>
-      <ActiveFontColor>-2147483634</ActiveFontColor>
-      <InactiveColor>-2147483633</InactiveColor>
-      <InactiveFontColor>-2147483630</InactiveFontColor>
+      <ActiveColor>2302755</ActiveColor>
+      <ActiveFontColor>12171705</ActiveFontColor>
+      <InactiveColor>4605510</InactiveColor>
+      <InactiveFontColor>12171705</InactiveFontColor>
     </PathLabel>
     <InactivePanelBrightness>100</InactivePanelBrightness>
     <FreeSpaceIndicator>
@@ -336,7 +336,7 @@
       <BackColor>16777215</BackColor>
     </FreeSpaceIndicator>
     <LogWindow>
-      <Info>8388608</Info>
+      <Info>12171705</Info>
       <Error>255</Error>
       <Success>32768</Success>
     </LogWindow>
