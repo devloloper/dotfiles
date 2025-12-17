@@ -39,8 +39,18 @@ fi
 # 2. Update Pywalfox (Firefox)
 pywalfox update
 
-# 3. Reload Waybar to pick up new colors
+# 3. Force Kitty Color Reload (Robustness)
+if [ -S /tmp/kitty_pywal ]; then
+    kitty @ --to unix:/tmp/kitty_pywal set-colors --all --configured ~/.cache/wal/colors-kitty.conf
+fi
+
+# 4. Reload Waybar to pick up new colors
 pkill -SIGUSR2 waybar
 
-# 4. Reload Hyprland (updates borders)
+# 4. Reload SwayNC Style
+if pgrep -x swaync >/dev/null; then
+    swaync-client -rs
+fi
+
+# 5. Reload Hyprland (updates borders)
 hyprctl reload

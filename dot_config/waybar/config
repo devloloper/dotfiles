@@ -8,22 +8,55 @@
     "margin-right": 8,
 
     "modules-left": [
-        "hyprland/workspaces",
-        "hyprland/window"
+        "custom/spotify",
+        "pulseaudio",
+        "network"
     ],
     "modules-center": [
-        "clock"
+        "hyprland/workspaces",
+        "hyprland/window",
+        "clock#time"
     ],
     "modules-right": [
-        "group/hardware",
-        "group/peripherals",
-        "network",
-        "pulseaudio",
+        "group/group-cpu",
+        "group/group-memory",
+        "custom/refresh",
+        "custom/gpu",
+        "group/group-power",
+        "group/group-peripherals",
         "tray",
+        "clock#date",
         "custom/power"
     ],
 
     // Modules configuration
+    "clock#time": {
+        "format": "{:%H:%M}",
+        "tooltip": false
+    },
+
+    "clock#date": {
+        "format": " {:%a, %b %e}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format-alt": "{:%Y-%m-%d}"
+    },
+
+    "custom/spotify": {
+        "exec": "/usr/bin/playerctl -p spotify metadata --format '{{artist}} - {{title}}'",
+        "format": " {}",
+        "interval": 2,
+        "on-click": "playerctl -p spotify play-pause",
+        "max-length": 40
+    },
+
+    "custom/refresh": {
+        "exec": "~/.config/waybar/scripts/refresh_rate.sh",
+        "return-type": "json",
+        "format": "󰜉 {}",
+        "interval": 5,
+        "tooltip": true
+    },
+
     "hyprland/workspaces": {
         "disable-scroll": true,
         "all-outputs": false,
@@ -54,24 +87,51 @@
         "format-alt": "{:%Y-%m-%d}"
     },
 
-    "group/hardware": {
+    "group/group-cpu": {
         "orientation": "horizontal",
         "modules": [
             "cpu",
-            "memory",
-            "disk",
-            "custom/fans",
-            "custom/gpu",
-            "custom/wattage",
-            "temperature"
+            "custom/cpu-temp",
+            "custom/fans"
         ]
     },
 
-    "group/peripherals": {
+    "group/group-memory": {
         "orientation": "horizontal",
         "modules": [
-            "battery#mouse",
+            "memory",
+            "custom/disk"
+        ]
+    },
+
+    "custom/disk": {
+        "exec": "~/.config/waybar/scripts/disk.sh",
+        "return-type": "json",
+        "format": "{}",
+        "interval": 30,
+        "tooltip": true
+    },
+    
+    "custom/cpu-temp": {
+        "exec": "~/.config/waybar/scripts/cpu-temp.sh",
+        "return-type": "json",
+        "format": "{}",
+        "interval": 5,
+        "tooltip": true
+    },
+
+    "group/group-power": {
+        "orientation": "horizontal",
+        "modules": [
+            "custom/wattage",
             "custom/ups"
+        ]
+    },
+
+    "group/group-peripherals": {
+        "orientation": "horizontal",
+        "modules": [
+            "custom/mouse"
         ]
     },
 
@@ -79,7 +139,7 @@
         "exec": "~/.config/waybar/scripts/ups-monitor.sh",
         "return-type": "json",
         "format": "{}",
-        "interval": 5,
+        "interval": 10,
         "tooltip": true
     },
 
@@ -87,23 +147,19 @@
         "exec": "~/.config/waybar/scripts/fans.sh",
         "return-type": "json",
         "format": "{}",
-        "interval": 2,
+        "interval": 5,
         "tooltip": true
     },
 
-    "battery#mouse": {
-        "bat": "hidpp_battery_0",
-        "format": "󰍽 {capacity}%",
-        "format-icons": ["", "", "", "", ""],
+    "custom/mouse": {
+        "exec": "~/.config/waybar/scripts/mouse-battery.sh",
+        "return-type": "json",
+        "format": "󰍽 {}",
         "interval": 60,
-        "tooltip-format": "Mouse Battery: {capacity}%"
+        "tooltip": true
     },
 
-    "disk": {
-        "interval": 30,
-        "format": " {used}/{total}",
-        "path": "/"
-    },
+
 
     "cpu": {
         "format": " {usage:>3}%",
@@ -117,46 +173,36 @@
     },
 
     "custom/gpu": {
-        "exec": "~/.config/waybar/scripts/gpu.sh",
+        "exec": "~/.config/waybar/scripts/nvidia_monitor.py gpu",
         "return-type": "json",
         "format": "󰍹 {}",
-        "interval": 2,
+        "interval": 3,
         "tooltip": true
     },
 
     "custom/wattage": {
-        "exec": "~/.config/waybar/scripts/wattage.sh",
+        "exec": "~/.config/waybar/scripts/nvidia_monitor.py power",
         "return-type": "json",
         "format": "{}",
-        "interval": 2,
+        "interval": 3,
         "tooltip": true
     },
 
-    "temperature": {
-        // "thermal-zone": 2,
-        // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
-        "critical-threshold": 80,
-        "format-critical": " {temperatureC}°C",
-        "format": " {temperatureC}°C",
-        "tooltip": false
-    },
+
 
     "network": {
         // "interface": "wlan0", // (Optional) To force the use of this interface
-        "format-wifi": " {essid} {bandwidthDownBytes}↓ {bandwidthUpBytes}↑",
         "format-ethernet": "󰈀 {bandwidthDownBytes}↓ {bandwidthUpBytes}↑",
         "tooltip-format": "{ifname} via {gwaddr}",
         "format-linked": "{ifname} (No IP)",
         "format-disconnected": "⚠ Disconnected",
         "format-alt": "{ifname}: {ipaddr}/{cidr}",
-        "interval": 2
+        "interval": 3
     },
 
     "pulseaudio": {
         // "scroll-step": 1, // %, can be a float
-        "format": " {icon} {volume}%",
-        "format-bluetooth": "{icon} {volume}%",
-        "format-bluetooth-muted": " {icon}",
+        "format": "{icon} {volume}%",
         "format-muted": "",
         "format-icons": {
             "headphone": "",
@@ -178,6 +224,6 @@
     "custom/power": {
         "format": "⏻ ",
         "tooltip": false,
-        "on-click": "systemctl poweroff"
+        "on-click": "~/.config/waybar/scripts/launch-wlogout.sh"
     }
 }

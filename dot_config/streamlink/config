@@ -2,16 +2,11 @@
 
 # Player options
 player=mpv
-# MPV optimizations for streaming:
-# --cache=yes: Enable caching
-# --demuxer-max-bytes=100MiB: Large buffer for stability
-# --demuxer-max-back-bytes=50MiB: Allow rewinding in the live stream
-player-args=--cache=yes --demuxer-max-bytes=100MiB --demuxer-max-back-bytes=50MiB
 
 # HLS / Stream options
 # Increase threads for segment downloading to prevent buffering
 stream-segment-threads=4
 
 # Twitch specific optimizations
-# Low latency mode (reduces delay to broadcaster)
-twitch-low-latency
+# Low latency mode disabled for stability
+# twitch-low-latency
