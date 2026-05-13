@@ -1,7 +1,7 @@
 if status is-interactive
     # Commands to run in interactive sessions can go here
     if command -q uwsm; and uwsm check may-start
-        exec uwsm start hyprland
+        exec uwsm start hyprland.desktop
     end
     alias g git
     alias theme '~/.config/hypr/scripts/auto-theme.sh'
