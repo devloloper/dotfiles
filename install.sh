@@ -34,14 +34,8 @@ link_env() {
 
     echo "Linking $1 environment..."
 
-    # Hyprland 0.55 uses hyprland.lua. Remove the old generated/legacy entrypoint
-    # so Hyprland cannot fall back to looking for hyprland.conf after install.
-    if [ "$1" = "home" ] || [ "$1" = "work" ]; then
-        rm -f "$HOME/.config/hypr/hyprland.conf"
-    fi
-
     # Find all files recursively, ignoring directories and .disabled files
-    cd "$env_folder" && find . -type f ! -name "*.disabled" ! -path "./.config/hypr/hyprland.conf" | while read -r file; do
+    cd "$env_folder" && find . -type f ! -name "*.disabled" | while read -r file; do
     # Strip the leading './'
     local rel_path="${file#./}"
     local src="$env_folder/$rel_path"
