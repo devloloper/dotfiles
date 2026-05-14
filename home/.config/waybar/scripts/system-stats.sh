@@ -96,6 +96,7 @@ get_load() {
 
 get_water_temp() {
     HWMON_PATH=$(grep -l "asusec" /sys/class/hwmon/hwmon*/name 2>/dev/null | head -n 1 | xargs -r dirname)
+    BOARD_HWMON_PATH=$(grep -l "nct6798" /sys/class/hwmon/hwmon*/name 2>/dev/null | head -n 1 | xargs -r dirname)
 
     if [ -z "$HWMON_PATH" ]; then
         echo "{\"text\": \" N/A\", \"tooltip\": \"ASUS EC water sensor not found\", \"class\": \"custom-water-temp\"}"
@@ -130,6 +131,43 @@ get_water_temp() {
                 ;;
         esac
     done
+
+    if [ -n "$BOARD_HWMON_PATH" ]; then
+        PUMP_RPM=""
+        FAN_MIN=""
+        FAN_MAX=""
+
+        for fan_input in "$BOARD_HWMON_PATH"/fan*_input; do
+            [ -f "$fan_input" ] || continue
+
+            FAN_NAME=$(basename "$fan_input")
+            FAN_ID=${FAN_NAME#fan}
+            FAN_ID=${FAN_ID%_input}
+            RPM=$(cat "$fan_input")
+
+            [ "$RPM" -gt 0 ] || continue
+
+            if [ "$FAN_ID" = "7" ]; then
+                PUMP_RPM=$RPM
+                continue
+            fi
+
+            if [ -z "$FAN_MIN" ] || [ "$RPM" -lt "$FAN_MIN" ]; then
+                FAN_MIN=$RPM
+            fi
+            if [ -z "$FAN_MAX" ] || [ "$RPM" -gt "$FAN_MAX" ]; then
+                FAN_MAX=$RPM
+            fi
+        done
+
+        if [ -n "$PUMP_RPM" ]; then
+            TOOLTIP="$TOOLTIP\nPump: ${PUMP_RPM} RPM"
+        fi
+
+        if [ -n "$FAN_MIN" ] && [ -n "$FAN_MAX" ]; then
+            TOOLTIP="$TOOLTIP\nFans: ${FAN_MIN}-${FAN_MAX} RPM"
+        fi
+    fi
 
     if [ "$MAX_TEMP" -eq -999 ]; then
         echo "{\"text\": \" N/A\", \"tooltip\": \"$TOOLTIP\", \"class\": \"custom-water-temp\"}"
