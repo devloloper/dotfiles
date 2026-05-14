@@ -12,11 +12,37 @@ if [ -f "$config" ]; then
         s/"window_mainframe":\s*"[^"]*"/"window_mainframe": "3; 3; 7674; 2114; 0"/s;
         s/"enable_bvh":\s*true/"enable_bvh": false/s;
         s/"enable_opengl_multi_instance":\s*true/"enable_opengl_multi_instance": false/s;
+        s/"show_model_mesh":\s*false/"show_model_mesh": true/s;
     ' "$config"
 fi
 
-exec env \
-    WEBKIT_DISABLE_DMABUF_RENDERER=1 \
-    WEBKIT_FORCE_COMPOSITING_MODE=1 \
-    WEBKIT_DISABLE_COMPOSITING_MODE=1 \
-    /usr/bin/bambu-studio "$@"
+case "${BAMBU_RENDER_BACKEND:-zink}" in
+    software)
+        exec env \
+            __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json \
+            LIBGL_ALWAYS_SOFTWARE=1 \
+            WEBKIT_DISABLE_DMABUF_RENDERER=1 \
+            WEBKIT_FORCE_COMPOSITING_MODE=1 \
+            WEBKIT_DISABLE_COMPOSITING_MODE=1 \
+            /usr/bin/bambu-studio "$@"
+        ;;
+    native)
+        exec env \
+            __GLX_VENDOR_LIBRARY_NAME=nvidia \
+            WEBKIT_DISABLE_DMABUF_RENDERER=1 \
+            WEBKIT_FORCE_COMPOSITING_MODE=1 \
+            WEBKIT_DISABLE_COMPOSITING_MODE=1 \
+            /usr/bin/bambu-studio "$@"
+        ;;
+    zink|*)
+        exec env \
+            GDK_BACKEND=wayland \
+            QT_QPA_PLATFORM=wayland \
+            __GLX_VENDOR_LIBRARY_NAME=mesa \
+            __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json \
+            MESA_LOADER_DRIVER_OVERRIDE=zink \
+            GALLIUM_DRIVER=zink \
+            WEBKIT_DISABLE_DMABUF_RENDERER=1 \
+            /usr/bin/bambu-studio "$@"
+        ;;
+esac

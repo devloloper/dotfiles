@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=BambuStudio2 Software
+Exec=/usr/bin/env BAMBU_RENDER_BACKEND=software /home/per/.local/bin/bambustudio2 %U
+Icon=BambuStudio
+Type=Application
+Categories=Utility;
+MimeType=x-scheme-handler/bambustudio;model/stl;application/vnd.ms-3mfdocument;application/prs.wavefront-obj;application/x-amf;
