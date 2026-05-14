@@ -3,6 +3,7 @@
 
 set -l CACHE_FILE "$HOME/.cache/fzf_launcher_cache"
 set -l HISTORY_FILE "$HOME/.cache/fzf_launcher_history"
+mkdir -p (dirname "$CACHE_FILE") (dirname "$HISTORY_FILE")
 touch "$HISTORY_FILE"
 
 # SMART CACHE:
@@ -17,11 +18,11 @@ set -l REBUILD false
 
 if not test -f "$CACHE_FILE"
     set REBUILD true
-else if test (find "$CACHE_FILE" -mmin +60)
+else if test (find "$CACHE_FILE" -mmin +60 -print -quit)
     set REBUILD true
 else
     for dir in $APPS_DIRS
-        if test -d "$dir"; and test (find "$dir" -newer "$CACHE_FILE" 2>/dev/null)
+        if test -d "$dir"; and test (find "$dir" -newer "$CACHE_FILE" -print -quit 2>/dev/null)
             set REBUILD true
             break
         end
@@ -33,10 +34,23 @@ if test "$REBUILD" = "true"
     for dir in $APPS_DIRS
         if test -d "$dir"
             for file in "$dir"/*.desktop
-                if test -f "$file"; and not grep -q "^NoDisplay=true" "$file"
+                if test -f "$file"; and grep -q "^Type=Application" "$file"; and not grep -q "^NoDisplay=true" "$file"; and not grep -q "^Hidden=true" "$file"
                     set -l name (grep -m 1 "^Name=" "$file" | cut -d= -f2-)
-                    set -l cmd (grep -m 1 "^Exec=" "$file" | cut -d= -f2- | sed -E 's/ %([a-zA-Z])//g' | sed 's/^"//; s/"$//')
+                    set -l cmd (grep -m 1 "^Exec=" "$file" | cut -d= -f2- | sed -E 's/[[:space:]]*%([a-zA-Z])//g' | sed 's/^"//; s/"$//')
                     set -l desc (grep -m 1 "^Comment=" "$file" | cut -d= -f2- | sed 's/^"//; s/"$//')
+                    set -l try_exec (grep -m 1 "^TryExec=" "$file" | cut -d= -f2-)
+
+                    if test -n "$try_exec"
+                        if string match -q "/*" -- "$try_exec"
+                            test -x "$try_exec"; or continue
+                        else
+                            command -sq -- "$try_exec"; or continue
+                        end
+                    end
+
+                    if grep -q "^Terminal=true" "$file"
+                        set cmd "kitty -e $cmd"
+                    end
                     
                     if test -z "$desc"
                         set desc "No description available."
