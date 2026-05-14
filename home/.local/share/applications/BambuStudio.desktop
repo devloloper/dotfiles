@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=BambuStudio2
-Exec=/home/per/.local/bin/bambustudio2 %U
+Name=BambuStudio
+Exec=/home/per/.local/bin/bambustudio %U
 Icon=BambuStudio
 Type=Application
 Categories=Utility;

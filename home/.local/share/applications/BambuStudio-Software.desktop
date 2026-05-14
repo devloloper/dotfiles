@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=BambuStudio2 Software
-Exec=/usr/bin/env BAMBU_RENDER_BACKEND=software /home/per/.local/bin/bambustudio2 %U
+Name=BambuStudio Software
+Exec=/usr/bin/env BAMBU_RENDER_BACKEND=software /home/per/.local/bin/bambustudio %U
 Icon=BambuStudio
 Type=Application
 Categories=Utility;
