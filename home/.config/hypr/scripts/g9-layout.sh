@@ -41,16 +41,16 @@ for i in "${!TARGETS[@]}"; do
     ADDR=${WINDOWS[$i]}
     PCT=${TARGETS[$i]}
     
-    hyprctl dispatch focuswindow "address:$ADDR" >> $LOG 2>&1
+    hyprctl dispatch "hl.dsp.focus({ window = 'address:$ADDR' })" >> $LOG 2>&1
     
     CUR_WIDTH=$(hyprctl activewindow -j | jq '.size[0]')
     TARGET_PX=$(echo "($MONITOR_WIDTH * $PCT) / 100" | bc)
     DIFF=$(echo "$TARGET_PX - $CUR_WIDTH" | bc)
     
     echo "Slot $i ($ADDR): Current=$CUR_WIDTH, Target=$TARGET_PX, Diff=$DIFF" >> $LOG
-    hyprctl dispatch resizeactive "$DIFF" 0 >> $LOG 2>&1
+    hyprctl dispatch "hl.dsp.window.resize({ x = $DIFF, y = 0, relative = true })" >> $LOG 2>&1
 done
 
 # Refocus a central slot
 CENTER_IDX=$(echo "$COUNT / 2" | bc)
-hyprctl dispatch focuswindow "address:${WINDOWS[$CENTER_IDX]}" >> $LOG 2>&1
+hyprctl dispatch "hl.dsp.focus({ window = 'address:${WINDOWS[$CENTER_IDX]}' })" >> $LOG 2>&1

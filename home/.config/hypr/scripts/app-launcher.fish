@@ -71,5 +71,5 @@ if test -n "$SELECTED"
     set -l CMD "$fields[2]"
     
     echo "$NAME" >> "$HISTORY_FILE"
-    hyprctl dispatch exec "uwsm app -- $CMD"
+    hyprctl eval "hl.exec_cmd([==[uwsm app -- $CMD]==])"
 end

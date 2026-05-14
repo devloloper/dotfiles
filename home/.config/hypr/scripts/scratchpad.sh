@@ -4,10 +4,10 @@
 # Uses the special:scratchpad workspace
 
 # 1. Toggle the workspace visibility
-hyprctl dispatch togglespecialworkspace scratchpad
+hyprctl dispatch 'hl.dsp.workspace.toggle_special("scratchpad")'
 
 # 2. Ensure both terminals are running
-# The window rules in hyprland.conf will handle the placement and workspace assignment
+# The window rules in hyprland.lua handle placement and workspace assignment.
 if not hyprctl clients | grep -q "scratchpad-left"
     uwsm app -- kitty --class scratchpad-left &
 end

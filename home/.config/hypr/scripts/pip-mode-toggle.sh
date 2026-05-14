@@ -12,10 +12,10 @@ WIDTH=$(hyprctl monitors -j | jq -r ".[] | select(.name == \"$MONITOR_NAME\") | 
 if [ "$WIDTH" -eq 7680 ]; then
     # Switch to PiP Mode (1440p 16:9)
     # Using @auto to ensure the handshake succeeds
-    hyprctl keyword monitor "$MONITOR_NAME, 2560x1440@auto, 0x0, 1, bitdepth, 10"
+    hyprctl eval "hl.monitor({ output = \"$MONITOR_NAME\", mode = \"2560x1440@auto\", position = \"0x0\", scale = \"1\", bitdepth = 10 })"
     notify-send "Hyprland" "PiP Mode Enabled (1440p 16:9)"
 else
     # Switch back to Native 8K
-    hyprctl keyword monitor "$MONITOR_NAME, 7680x2160@auto, 0x0, 1, bitdepth, 10"
+    hyprctl eval "hl.monitor({ output = \"$MONITOR_NAME\", mode = \"7680x2160@auto\", position = \"0x0\", scale = \"1\", bitdepth = 10 })"
     notify-send "Hyprland" "Native Mode Enabled (8K 32:9)"
 fi
