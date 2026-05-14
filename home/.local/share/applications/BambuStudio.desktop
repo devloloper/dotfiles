@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=BambuStudio2
-Exec=env WEBKIT_DISABLE_DMABUF_RENDERER=1 WEBKIT_FORCE_COMPOSITING_MODE=1 WEBKIT_DISABLE_COMPOSITING_MODE=1 /usr/bin/bambu-studio %U
+Exec=/home/per/.local/bin/bambustudio2 %U
 Icon=BambuStudio
 Type=Application
 Categories=Utility;

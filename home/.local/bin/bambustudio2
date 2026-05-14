@@ -1,0 +1,22 @@
+#!/bin/sh
+set -eu
+
+config="${XDG_CONFIG_HOME:-$HOME/.config}/BambuStudio/BambuStudio.conf"
+
+if [ -f "$config" ]; then
+    layout='layout2|name=sidebar;caption=;state=1932;dir=4;layer=0;row=0;pos=0;prop=100000;bestw=590;besth=1260;minw=210;minh=800;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=main;caption=;state=256;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=7000;besth=1260;minw=800;minh=800;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|dock_size(4,0,0)=590|dock_size(5,0,0)=7000|'
+
+    BAMBU_LAYOUT="$layout" perl -0pi -e '
+        my $layout = $ENV{"BAMBU_LAYOUT"};
+        s/"window_layout":\s*"[^"]*"/"window_layout": "$layout"/s;
+        s/"window_mainframe":\s*"[^"]*"/"window_mainframe": "3; 3; 7674; 2114; 0"/s;
+        s/"enable_bvh":\s*true/"enable_bvh": false/s;
+        s/"enable_opengl_multi_instance":\s*true/"enable_opengl_multi_instance": false/s;
+    ' "$config"
+fi
+
+exec env \
+    WEBKIT_DISABLE_DMABUF_RENDERER=1 \
+    WEBKIT_FORCE_COMPOSITING_MODE=1 \
+    WEBKIT_DISABLE_COMPOSITING_MODE=1 \
+    /usr/bin/bambu-studio "$@"
