@@ -86,25 +86,22 @@ get_ram_temp() {
     echo "{\"text\": \"$ICON $MAX_TEMP°C\", \"tooltip\": \"$TOOLTIP\", \"class\": \"custom-ram-temp\", \"percentage\": $MAX_TEMP}"
 }
 
-get_fans() {
-    # Fan 2 is the actual CPU Fan (~600-700 RPM)
-    FAN_CPU=$(sensors nct6798-isa-0290 | grep "fan2" | awk '{print $2}')
+get_load() {
+    read -r LOAD_1 LOAD_5 LOAD_15 _ < /proc/loadavg
+    CORES=$(nproc)
+    PERCENT=$(awk -v loadavg="$LOAD_1" -v cores="$CORES" 'BEGIN { printf "%d", (loadavg / cores) * 100 }')
 
-    # Fan 7 is the Water Pump (~4700 RPM)
-    FAN_PUMP=$(sensors nct6798-isa-0290 | grep "fan7" | awk '{print $2}')
-
-    # Output JSON
-    echo "{\"text\": \"󰈐 $FAN_CPU |  $FAN_PUMP\", \"tooltip\": \"CPU Fan: $FAN_CPU RPM\nWater Pump: $FAN_PUMP RPM\", \"class\": \"custom-fans\"}"
+    echo "{\"text\": \"󰓅 $LOAD_1\", \"tooltip\": \"Load average: $LOAD_1, $LOAD_5, $LOAD_15\nCPU threads: $CORES\", \"class\": \"custom-load\", \"percentage\": $PERCENT}"
 }
 
 get_disk() {
     # Disk Usage for /
-    USAGE=$(df -h / | tail -1 | awk '{print $3 "/" $2}')
+    USAGE=$(df -h / | tail -1 | awk '{print $3 " / " $2}')
 
     # Find all NVMe sensors using sensors command
     NVME_DEVICES=$(sensors 2>/dev/null | grep "nvme-pci-" | cut -d'-' -f3)
     
-    TEMPS_TEXT=""
+    MAX_TEMP=0
     TOOLTIP_TEXT="Disk Usage: $USAGE"
     
     for dev in $NVME_DEVICES; do
@@ -112,20 +109,20 @@ get_disk() {
         TEMP=$(sensors "$SENSOR_NAME" 2>/dev/null | grep "Composite" | awk '{print $2}' | cut -d. -f1 | cut -c2-)
         
         if [ -n "$TEMP" ]; then
-            if [ -z "$TEMPS_TEXT" ]; then
-                TEMPS_TEXT="${TEMP}°C"
-            else
-                TEMPS_TEXT="${TEMPS_TEXT} | ${TEMP}°C"
+            if [ "$TEMP" -gt "$MAX_TEMP" ]; then
+                MAX_TEMP=$TEMP
             fi
             TOOLTIP_TEXT="$TOOLTIP_TEXT\n$SENSOR_NAME: ${TEMP}°C"
         fi
     done
 
-    if [ -z "$TEMPS_TEXT" ]; then
-        TEMPS_TEXT="N/A"
+    if [ "$MAX_TEMP" -eq 0 ]; then
+        TEMP_TEXT="N/A"
+    else
+        TEMP_TEXT="${MAX_TEMP}°C"
     fi
 
-    echo "{\"text\": \" $USAGE |  $TEMPS_TEXT\", \"tooltip\": \"$TOOLTIP_TEXT\", \"class\": \"custom-disk\"}"
+    echo "{\"text\": \" $USAGE   $TEMP_TEXT\", \"tooltip\": \"$TOOLTIP_TEXT\", \"class\": \"custom-disk\"}"
 }
 
 case "$1" in
@@ -135,14 +132,14 @@ case "$1" in
     "ram")
         get_ram_temp
         ;;
-    "fans")
-        get_fans
+    "load")
+        get_load
         ;;
     "disk")
         get_disk
         ;;
     *)
-        echo "Usage: $0 {cpu|ram|fans|disk}"
+        echo "Usage: $0 {cpu|ram|load|disk}"
         exit 1
         ;;
 esac

@@ -9,6 +9,7 @@ import sys
 import json
 import glob
 import os
+import time
 
 def get_corsair_psu_stats():
     """
@@ -80,6 +81,60 @@ def get_corsair_psu_stats():
 
     return psu_watts, psu_temp
 
+def get_cpu_package_power():
+    """
+    Calculates Intel RAPL package power from the package energy counter.
+    The counter reports cumulative microjoules, so watts require a delta over time.
+    """
+    energy_path = "/sys/class/powercap/intel-rapl:0/energy_uj"
+    max_range_path = "/sys/class/powercap/intel-rapl:0/max_energy_range_uj"
+    state_dir = os.environ.get("XDG_RUNTIME_DIR", "/tmp")
+    state_path = os.path.join(state_dir, "waybar_cpu_rapl.state")
+
+    try:
+        with open(energy_path, "r") as f:
+            energy = int(f.read().strip())
+
+        max_range = None
+        try:
+            with open(max_range_path, "r") as f:
+                max_range = int(f.read().strip())
+        except Exception:
+            pass
+
+        now = time.monotonic()
+        previous_energy = None
+        previous_time = None
+
+        try:
+            with open(state_path, "r") as f:
+                previous_energy_s, previous_time_s = f.read().strip().split()
+                previous_energy = int(previous_energy_s)
+                previous_time = float(previous_time_s)
+        except Exception:
+            pass
+
+        with open(state_path, "w") as f:
+            f.write(f"{energy} {now}")
+
+        if previous_energy is None or previous_time is None:
+            return None
+
+        elapsed = now - previous_time
+        if elapsed <= 0:
+            return None
+
+        delta = energy - previous_energy
+        if delta < 0 and max_range:
+            delta += max_range
+
+        if delta < 0:
+            return None
+
+        return int(round((delta / 1_000_000) / elapsed))
+    except Exception:
+        return None
+
 def main():
     mode = sys.argv[1] if len(sys.argv) > 1 else "gpu"
 
@@ -115,10 +170,11 @@ def main():
         elif mode == "power":
             # Get PSU stats
             psu_watts, psu_temp = get_corsair_psu_stats()
+            cpu_watts = get_cpu_package_power()
+            cpu_text = f"{cpu_watts:>3}W" if cpu_watts is not None else "N/A"
             
-            # Text: ⚡ GPU: 123W | Total: 456W |  50°C
-            text = f"⚡ GPU: {power_W:>3}W | Total: {psu_watts:>3}W |  {psu_temp:>2}°C"
-            tooltip = f"PSU Power Draw: {psu_watts}W\nGPU Power Draw: {power_W}W\nPSU Temp: {psu_temp}°C"
+            text = f"⚡ CPU: {cpu_text} | GPU: {power_W:>3}W | Total: {psu_watts:>3}W |  {psu_temp:>2}°C"
+            tooltip = f"CPU Package Power: {cpu_text}\nGPU Power Draw: {power_W}W\nPSU Power Draw: {psu_watts}W\nPSU Temp: {psu_temp}°C"
 
             out = {
                 "text": text,

@@ -76,18 +76,12 @@
         "separate-outputs": true
     },
 
-    "clock": {
-        "format": "{:%H:%M   %a, %b %e}",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format-alt": "{:%Y-%m-%d}"
-    },
-
     "group/group-cpu": {
         "orientation": "horizontal",
         "modules": [
             "cpu",
             "custom/cpu-temp",
-            "custom/fans"
+            "custom/load"
         ]
     },
 
@@ -110,6 +104,14 @@
     
     "custom/cpu-temp": {
         "exec": "~/.config/waybar/scripts/system-stats.sh cpu",
+        "return-type": "json",
+        "format": "{}",
+        "interval": 5,
+        "tooltip": true
+    },
+
+    "custom/load": {
+        "exec": "~/.config/waybar/scripts/system-stats.sh load",
         "return-type": "json",
         "format": "{}",
         "interval": 5,
@@ -147,14 +149,6 @@
         "tooltip": true
     },
 
-    "custom/fans": {
-        "exec": "~/.config/waybar/scripts/system-stats.sh fans",
-        "return-type": "json",
-        "format": "{}",
-        "interval": 5,
-        "tooltip": true
-    },
-
     "custom/mouse": {
         "exec": "~/.config/waybar/scripts/mouse-battery.sh",
         "return-type": "json",
@@ -170,7 +164,7 @@
     },
 
     "memory": {
-        "format": " {used:0.1f}G/{total:0.1f}G",
+        "format": " {used:0.1f}G / {total:0.1f}G",
         "tooltip-format": "RAM: {used:0.1f}GB / {total:0.1f}GB"
     },
 
