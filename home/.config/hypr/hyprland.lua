@@ -234,6 +234,7 @@ hl.bind("CTRL + ALT + H", exec("/home/per/.config/hypr/scripts/g9-snap.sh 15"))
 hl.bind("CTRL + ALT + L", exec("/home/per/.config/hypr/scripts/g9-snap.sh 35"))
 hl.bind("CTRL + ALT + SPACE", exec("/home/per/.config/hypr/scripts/g9-layout.sh proportional"))
 hl.bind("CTRL + ALT + SHIFT + SPACE", exec("/home/per/.config/hypr/scripts/g9-layout.sh equal"))
+hl.bind("CTRL + ALT + G", exec("/home/per/.config/hypr/scripts/game-stream-layout.sh"))
 
 hl.bind("SHIFT + PRINT", exec("uwsm app -- hyprshot -m window"))
 hl.bind("PRINT", exec("uwsm app -- hyprshot -m output"))
