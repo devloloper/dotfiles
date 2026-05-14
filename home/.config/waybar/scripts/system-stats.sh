@@ -94,6 +94,51 @@ get_load() {
     echo "{\"text\": \"󰓅 $LOAD_1\", \"tooltip\": \"Load average: $LOAD_1, $LOAD_5, $LOAD_15\nCPU threads: $CORES\", \"class\": \"custom-load\", \"percentage\": $PERCENT}"
 }
 
+get_water_temp() {
+    HWMON_PATH=$(grep -l "asusec" /sys/class/hwmon/hwmon*/name 2>/dev/null | head -n 1 | xargs -r dirname)
+
+    if [ -z "$HWMON_PATH" ]; then
+        echo "{\"text\": \" N/A\", \"tooltip\": \"ASUS EC water sensor not found\", \"class\": \"custom-water-temp\"}"
+        return
+    fi
+
+    MAX_TEMP=-999
+    TOOLTIP="ASUS EC Temperatures:"
+
+    for label_file in "$HWMON_PATH"/temp*_label; do
+        [ -f "$label_file" ] || continue
+
+        LABEL=$(cat "$label_file")
+        case "$LABEL" in
+            Water_In|Water_Out|T_Sensor|VRM) ;;
+            *) continue ;;
+        esac
+
+        input_file="${label_file/_label/_input}"
+        [ -f "$input_file" ] || continue
+
+        TEMP_MILLI=$(cat "$input_file")
+        TEMP_C=$((TEMP_MILLI / 1000))
+        TOOLTIP="$TOOLTIP\n$LABEL: ${TEMP_C}°C"
+
+        case "$LABEL" in
+            Water_In|Water_Out|T_Sensor)
+                # ASUS reports disconnected temperature headers as -40C.
+                if [ "$TEMP_C" -gt -20 ] && [ "$TEMP_C" -gt "$MAX_TEMP" ]; then
+                    MAX_TEMP=$TEMP_C
+                fi
+                ;;
+        esac
+    done
+
+    if [ "$MAX_TEMP" -eq -999 ]; then
+        echo "{\"text\": \" N/A\", \"tooltip\": \"$TOOLTIP\", \"class\": \"custom-water-temp\"}"
+        return
+    fi
+
+    echo "{\"text\": \" ${MAX_TEMP}°C\", \"tooltip\": \"$TOOLTIP\", \"class\": \"custom-water-temp\", \"percentage\": $MAX_TEMP}"
+}
+
 get_disk() {
     # Disk Usage for /
     USAGE=$(df -h / | tail -1 | awk '{print $3 " / " $2}')
@@ -135,11 +180,14 @@ case "$1" in
     "load")
         get_load
         ;;
+    "water")
+        get_water_temp
+        ;;
     "disk")
         get_disk
         ;;
     *)
-        echo "Usage: $0 {cpu|ram|load|disk}"
+        echo "Usage: $0 {cpu|ram|load|water|disk}"
         exit 1
         ;;
 esac

@@ -81,6 +81,7 @@
         "modules": [
             "cpu",
             "custom/cpu-temp",
+            "custom/water-temp",
             "custom/load"
         ]
     },
@@ -104,6 +105,14 @@
     
     "custom/cpu-temp": {
         "exec": "~/.config/waybar/scripts/system-stats.sh cpu",
+        "return-type": "json",
+        "format": "{}",
+        "interval": 5,
+        "tooltip": true
+    },
+
+    "custom/water-temp": {
+        "exec": "~/.config/waybar/scripts/system-stats.sh water",
         "return-type": "json",
         "format": "{}",
         "interval": 5,

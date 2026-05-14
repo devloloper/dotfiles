@@ -97,7 +97,7 @@ window#waybar.sidebar-reserve {
     border: 1px solid @color4;
 }
 
-#cpu, #custom-cpu-temp, #custom-load, #memory, #custom-ram-temp, #custom-disk, #custom-wattage, #custom-ups, #custom-mouse {
+#cpu, #custom-cpu-temp, #custom-water-temp, #custom-load, #memory, #custom-ram-temp, #custom-disk, #custom-wattage, #custom-ups, #custom-mouse {
     background-color: transparent;
     opacity: 1;
     margin: 0 5px;
@@ -110,6 +110,7 @@ window#waybar.sidebar-reserve {
 /* Specific colors for modules inside groups */
 #cpu { color: @color2; }
 #custom-cpu-temp { color: @color1; }
+#custom-water-temp { color: @color4; }
 #custom-load { color: @color2; }
 #memory { color: @color3; }
 #custom-ram-temp { color: @color1; }
