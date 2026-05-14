@@ -5,23 +5,32 @@ set -l CACHE_FILE "$HOME/.cache/fzf_launcher_cache"
 set -l HISTORY_FILE "$HOME/.cache/fzf_launcher_history"
 touch "$HISTORY_FILE"
 
-# SMART CACHE: 
-# Check the last modification time of the system applications directory.
+# SMART CACHE:
+# Check the last modification time of known desktop entry directories.
 # If /usr/share/applications is newer than our cache, we rebuild.
-set -l APPS_DIR "/usr/share/applications"
+set -l APPS_DIRS \
+    /usr/share/applications \
+    $HOME/.local/share/applications \
+    /var/lib/flatpak/exports/share/applications \
+    $HOME/.local/share/flatpak/exports/share/applications
 set -l REBUILD false
 
 if not test -f "$CACHE_FILE"
     set REBUILD true
-else if test (find "$APPS_DIR" -newer "$CACHE_FILE" 2>/dev/null)
-    set REBUILD true
 else if test (find "$CACHE_FILE" -mmin +60)
     set REBUILD true
+else
+    for dir in $APPS_DIRS
+        if test -d "$dir"; and test (find "$dir" -newer "$CACHE_FILE" 2>/dev/null)
+            set REBUILD true
+            break
+        end
+    end
 end
 
 if test "$REBUILD" = "true"
     set -l TEMP_CACHE (mktemp)
-    for dir in /usr/share/applications $HOME/.local/share/applications
+    for dir in $APPS_DIRS
         if test -d "$dir"
             for file in "$dir"/*.desktop
                 if test -f "$file"; and not grep -q "^NoDisplay=true" "$file"
