@@ -17,4 +17,15 @@
     color13: {{color13}};
     color14: {{color14}};
     color15: {{color15}};
+
+    /* Standard Rofi color names */
+    selected-active-background: {{color11}};
+    selected-active-foreground: {{background}};
+    selected-normal-background: {{color11}};
+    selected-normal-foreground: {{background}};
+    selected-urgent-background: {{color9}};
+    selected-urgent-foreground: {{background}};
+
+    border-color: {{color11}};
+    separatorcolor: {{color8}};
 }
