@@ -6,8 +6,8 @@ backend = "resized"
 # Color space: Lab provides better perceptual accuracy
 color_space = "lab"
 
-# Palette: dark16 is robust and provides 16 colors
-palette = "dark16"
+# Palette: kmeans is the recommended modern replacement for dark16
+palette = "kmeans"
 
 # Filter: We use a custom filter to ensure saturation and contrast
 filter = "contrast"
