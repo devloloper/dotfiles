@@ -1,0 +1,28 @@
+{
+	"folders": [
+		{ "name": "Repo Root", "path": "." },
+		{ "name": "OS: Hyprland", "path": "home/.config/hypr" },
+		{ "name": "OS: Waybar", "path": "home/.config/waybar" },
+		{ "name": "OS: Fish Shell", "path": "common/.config/fish" },
+		{ "name": "OS: UWSM", "path": "home/.config/uwsm" },
+		{ "name": "OS: Rofi", "path": "home/.config/rofi" },
+		{ "name": "Audio: Pipewire", "path": "home/.config/pipewire" },
+		{ "name": "Audio: Wireplumber", "path": "home/.config/wireplumber" },
+		{ "name": "System: Udev/Scripts", "path": "home/.config/systemd" },
+		{ "name": "Logic: AI Context", "path": ".", "include": ["INSTRUCTIONS.md", "SYSTEM.md", "common/.config/gamemode.ini"] }
+	],
+	"settings": {
+		"files.exclude": {
+			"**/.git": true,
+			"**/Code": true,
+			"**/google-chrome": true,
+			"**/discord": true,
+			"**/BambuStudio": true
+		},
+		"search.exclude": {
+			"**/Code": true,
+			"**/.cache": true
+		},
+		"search.followSymlinks": false
+	}
+}

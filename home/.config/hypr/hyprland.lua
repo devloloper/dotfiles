@@ -138,11 +138,6 @@ hl.config({
     },
 })
 
-hl.workspace_rule({ workspace = "1", monitor = "DP-2", default = true })
-hl.workspace_rule({ workspace = "2", monitor = "DP-2" })
-hl.workspace_rule({ workspace = "3", monitor = "DP-2" })
-hl.workspace_rule({ workspace = "4", monitor = "DP-2" })
-
 hl.on("hyprland.start", function()
     hl.exec_cmd("uwsm app -- xrandr --output DP-2 --primary")
     hl.exec_cmd("uwsm app -- /usr/lib/hyprpolkitagent/hyprpolkitagent")
