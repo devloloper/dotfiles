@@ -1,24 +1,20 @@
 #!/bin/fish
-# Native Fish TUI Launcher - Smart Cache Version
+# Native Fish TUI Launcher - Optimized Version
 
 set -l CACHE_FILE "$HOME/.cache/fzf_launcher_cache"
-set -l HISTORY_FILE "$HOME/.cache/fzf_launcher_history"
+set -l HISTORY_FILE "$HOME/.cache/fzf_launcher_history" # Legacy/Backup
 mkdir -p (dirname "$CACHE_FILE") (dirname "$HISTORY_FILE")
-touch "$HISTORY_FILE"
 
-# SMART CACHE:
-# Check the last modification time of known desktop entry directories.
-# If /usr/share/applications is newer than our cache, we rebuild.
+# APPS_DIRS to scan
 set -l APPS_DIRS \
     /usr/share/applications \
     $HOME/.local/share/applications \
     /var/lib/flatpak/exports/share/applications \
     $HOME/.local/share/flatpak/exports/share/applications
-set -l REBUILD false
 
+# Check if we need to rebuild the cache
+set -l REBUILD false
 if not test -f "$CACHE_FILE"
-    set REBUILD true
-else if test (find "$CACHE_FILE" -mmin +60 -print -quit)
     set REBUILD true
 else
     for dir in $APPS_DIRS
@@ -30,6 +26,12 @@ else
 end
 
 if test "$REBUILD" = "true"
+    # To preserve existing counts during rebuild, we'll read the old cache into a variable
+    set -l OLD_COUNTS
+    if test -f "$CACHE_FILE"
+        set OLD_COUNTS (awk -F'\t' '{print $1"\t"$2}' "$CACHE_FILE")
+    end
+
     set -l TEMP_CACHE (mktemp)
     for dir in $APPS_DIRS
         if test -d "$dir"
@@ -52,47 +54,56 @@ if test "$REBUILD" = "true"
                         set cmd "kitty -e $cmd"
                     end
                     
-                    if test -z "$desc"
-                        set desc "No description available."
+                    test -z "$desc"; and set desc "No description available."
+
+                    # Find existing count or default to 0
+                    set -l count "00000"
+                    if set -l match (printf "%s\n" $OLD_COUNTS | grep -F "$name\t")
+                        set count (printf "%s" $match | cut -f1)
                     end
 
                     if test -n "$name"; and test -n "$cmd"
-                        printf "%s\t%s\t%s\n" "$name" "$cmd" "$desc" >> "$TEMP_CACHE"
+                        printf "%s\t%s\t%s\t%s\n" "$count" "$name" "$cmd" "$desc" >> "$TEMP_CACHE"
                     end
                 end
             end
         end
     end
-    sort -u "$TEMP_CACHE" > "$CACHE_FILE"
+    sort -t\t -u -k2,2 "$TEMP_CACHE" > "$CACHE_FILE"
     rm "$TEMP_CACHE"
 end
 
-function get_ranked_list --inherit-variable HISTORY_FILE --inherit-variable CACHE_FILE
-    set -l hist (cat "$HISTORY_FILE")
-    while read -l line
-        set -l fields (string split \t -- "$line")
-        set -l name "$fields[1]"
-        set -l count (printf "%s\n" $hist | grep -Fxc "$name")
-        printf "%05d\t%s\n" "$count" "$line"
-    end < "$CACHE_FILE"
-end
-
 set -l TAB (printf "\t")
-set -l SELECTED (get_ranked_list | sort -k1,1rn -k2,2 | cut -f2- | fzf \
+
+# Use fzf to select. Note: we sort the cache file by the first column (count) descending.
+set -l SELECTED (sort -rn "$CACHE_FILE" | fzf \
     --prompt="Launch > " \
     --layout=reverse --border=rounded --margin=5%,10% \
     --delimiter="$TAB" \
-    --with-nth=1 \
+    --with-nth=2 \
     --no-sort \
-    --header="History-ranked Apps" \
-    --preview "echo 'Cmd:  {2}'; echo ''; echo 'Desc: {3}'" \
+    --header="Ranked Applications" \
+    --preview "echo 'Cmd:  {3}'; echo ''; echo 'Desc: {4}'" \
     --preview-window="right:50%:wrap:border-left")
 
 if test -n "$SELECTED"
     set -l fields (string split \t -- "$SELECTED")
-    set -l NAME "$fields[1]"
-    set -l CMD "$fields[2]"
+    set -l COUNT "$fields[1]"
+    set -l NAME "$fields[2]"
+    set -l CMD "$fields[3]"
     
+    # Increment rank in cache file efficiently using awk
+    set -l NEW_COUNT (math $COUNT + 1)
+    set -l PADDED_COUNT (printf "%05d" $NEW_COUNT)
+    
+    # Update cache file in place
+    set -l TEMP_UPDATE (mktemp)
+    awk -v name="$NAME" -v new_count="$PADDED_COUNT" -F'\t' 'BEGIN {OFS="\t"} $2 == name {$1 = new_count} {print}' "$CACHE_FILE" > "$TEMP_UPDATE"
+    mv "$TEMP_UPDATE" "$CACHE_FILE"
+
+    # Also log to history for posterity
     echo "$NAME" >> "$HISTORY_FILE"
+    
+    # Launch
     hyprctl eval "hl.exec_cmd([==[uwsm app -- $CMD]==])"
 end
