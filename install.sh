@@ -13,9 +13,13 @@ while [[ $# -gt 0 ]]; do
             ENV_TYPE="home"
             shift
             ;;
+        --server)
+            ENV_TYPE="server"
+            shift
+            ;;
         *)
             echo "Unknown option: $1"
-            echo "Usage: ./install.sh [--work|--home]"
+            echo "Usage: ./install.sh [--work|--home|--server]"
             exit 1
             ;;
     esac
@@ -58,7 +62,10 @@ done
 link_env "common"
 
 # Link Environment-Specific Identity & Files
-if [[ "$ENV_TYPE" == "work" ]]; then
+if [[ "$ENV_TYPE" == "server" ]]; then
+    link_env "server"
+    ln -sf "$DOTFILES_DIR/server/.gitconfig_identity" "$HOME/.gitconfig_identity"
+elif [[ "$ENV_TYPE" == "work" ]]; then
     link_env "work"
     ln -sf "$DOTFILES_DIR/work/.gitconfig_identity" "$HOME/.gitconfig_identity"
 else
