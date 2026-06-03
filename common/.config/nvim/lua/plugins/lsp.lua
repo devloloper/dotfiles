@@ -50,7 +50,7 @@ return {
         vim.lsp.config('clangd', {
             cmd = {
                 "clangd", "--background-index", "--header-insertion=never",
-                "--query-driver=/opt/iudc_toolchain/sysroots/x86_64-pokysdk-linux/usr/bin/aarch64-poky-linux/aarch64-poky-linux-g*",
+                "--query-driver=/opt/iudc_sdk/5.0/sysroots/x86_64-pokysdk-linux/usr/bin/aarch64-poky-linux/aarch64-poky-linux-g*",
             }
         })
         vim.lsp.enable('clangd')

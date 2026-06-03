@@ -28,3 +28,8 @@ map('n', '<leader>ci', '<cmd>CMakeStepOut<cr>', { desc = "Toggle CMake Console" 
 map('n', '<leader>gb', '<cmd>Telescope git_branches<cr>', { desc = "Git Branches" })
 map('n', '<leader>gs', '<cmd>Telescope git_status<cr>', { desc = "Git Status" })
 map('n', '<leader>gl', '<cmd>Telescope git_commits<cr>', { desc = "Git Commits" })
+
+-- Diagnostics
+map('n', 'gl', vim.diagnostic.open_float, { desc = "Show Diagnostic" })
+map('n', '[d', vim.diagnostic.goto_prev, { desc = "Previous Diagnostic" })
+map('n', ']d', vim.diagnostic.goto_next, { desc = "Next Diagnostic" })
