@@ -2,11 +2,11 @@
 
 local map = vim.keymap.set
 
--- Split Navigation (Alt + hjkl)
-map('n', '<M-h>', '<C-w>h', { desc = "Go to Left Window" })
-map('n', '<M-j>', '<C-w>j', { desc = "Go to Lower Window" })
-map('n', '<M-k>', '<C-w>k', { desc = "Go to Upper Window" })
-map('n', '<M-l>', '<C-w>l', { desc = "Go to Right Window" })
+-- Split Navigation (Alt+Shift + hjkl)
+map('n', '<M-H>', '<C-w>h', { desc = "Go to Left Window" })
+map('n', '<M-J>', '<C-w>j', { desc = "Go to Lower Window" })
+map('n', '<M-K>', '<C-w>k', { desc = "Go to Upper Window" })
+map('n', '<M-L>', '<C-w>l', { desc = "Go to Right Window" })
 
 -- Escape Hatch
 map('i', 'jk', '<ESC>', { desc = "Escape" })
@@ -33,3 +33,13 @@ map('n', '<leader>gl', '<cmd>Telescope git_commits<cr>', { desc = "Git Commits" 
 map('n', 'gl', vim.diagnostic.open_float, { desc = "Show Diagnostic" })
 map('n', '[d', vim.diagnostic.goto_prev, { desc = "Previous Diagnostic" })
 map('n', ']d', vim.diagnostic.goto_next, { desc = "Next Diagnostic" })
+
+-- Move Lines
+map('n', '<M-j>', '<cmd>m .+1<cr>==', { desc = "Move Line Down" })
+map('n', '<M-k>', '<cmd>m .-2<cr>==', { desc = "Move Line Up" })
+map('v', '<M-j>', ":m '>+1<cr>gv=gv", { desc = "Move Selection Down" })
+map('v', '<M-k>', ":m '<-2<cr>gv=gv", { desc = "Move Selection Up" })
+
+-- Buffer Management
+map('n', '<leader>bd', '<cmd>bdelete<cr>', { desc = "Close Buffer" })
+map('n', '<leader>bo', '<cmd>%bdelete|edit#|bdelete#<cr>', { desc = "Close Other Buffers" })
