@@ -38,7 +38,10 @@
 .config/uwsm/env
 .config/waybar
 .config/waybar/config
+.config/waybar/margins.jsonc
 .config/waybar/style.css
+.config/wireguard
+.config/wireguard/launch-vpn-firefox.sh
 .gitconfig
 .local
 .local/bin

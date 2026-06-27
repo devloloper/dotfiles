@@ -25,19 +25,21 @@ def get_corsair_psu_stats():
         for path in glob.glob("/sys/class/hwmon/hwmon*"):
             try:
                 with open(os.path.join(path, "name"), "r") as f:
-                    if "corsairpsu" in f.read().strip():
+                    name = f.read().strip()
+                    if "corsairpsu" in name:
                         hwmon_path = path
                         break
             except:
                 continue
         
         if hwmon_path:
-            # Try to read power (usually power1_input in microWatts)
+            # power1_input is usually total DC power in microWatts
             try:
+                # On HX1500i, power1_input is often total power
+                # power2_input might be the 12V rail
                 p_path = os.path.join(hwmon_path, "power1_input")
                 if os.path.exists(p_path):
                     with open(p_path, "r") as f:
-                        # microWatts to Watts
                         psu_watts = int(int(f.read().strip()) / 1000000)
             except:
                 pass

@@ -37,7 +37,7 @@ if wal then
 end
 
 hl.monitor({
-    output = "DP-2",
+    output = "desc:Samsung Electric Company Odyssey G95NC HNTX800635",
     mode = "7680x2160@240",
     position = "0x0",
     scale = "1",
@@ -282,8 +282,7 @@ hl.window_rule({
 
 hl.window_rule({
     name = "PictureInPicture",
-    float = true,
-    pin = true,
+    group = "set",
     opaque = true,
     match = { title = "Picture-in-Picture" },
 })

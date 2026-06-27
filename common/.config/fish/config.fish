@@ -42,7 +42,12 @@ set -gx GITHUB_USERNAME perturner
 
 fish_add_path -P ~/.cargo/bin
 fish_add_path -P ~/.npm-global/bin
+fish_add_path /home/per/.local/bin
 
 command -q pyenv; and pyenv init - | source
 command -q starship; and starship init fish | source
 zoxide init fish | source
+
+
+# Added by Antigravity CLI installer
+set -gx PATH "/home/per/.local/bin" $PATH

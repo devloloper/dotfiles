@@ -125,7 +125,14 @@ alias fish="exec fish -l"
 
 # Kiro CLI post block. Keep at the bottom of this file.
 [[ -f "${HOME}/.local/share/kiro-cli/shell/bashrc.post.bash" ]] && builtin source "${HOME}/.local/share/kiro-cli/shell/bashrc.post.bash"
+
 export VCPKG_DEFAULT_BINARY_CACHE=~/.vcpkg-cache
+
 command -v starship &>/dev/null && eval "$(starship init bash)"
+
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+
 command -v zoxide &>/dev/null && eval "$(zoxide init bash)"
+
+# Added by Antigravity CLI installer
+export PATH="/home/per/.local/bin:$PATH"
