@@ -42,4 +42,11 @@ map('v', '<M-k>', ":m '<-2<cr>gv=gv", { desc = "Move Selection Up" })
 
 -- Buffer Management
 map('n', '<leader>bd', '<cmd>bdelete<cr>', { desc = "Close Buffer" })
-map('n', '<leader>bo', '<cmd>%bdelete|edit#|bdelete#<cr>', { desc = "Close Other Buffers" })
+map('n', '<leader>bo', function()
+    local cur = vim.api.nvim_get_current_buf()
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if buf ~= cur and vim.api.nvim_buf_is_loaded(buf) then
+            vim.api.nvim_buf_delete(buf, {})
+        end
+    end
+end, { desc = "Close Other Buffers" })

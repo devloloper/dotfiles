@@ -11,6 +11,12 @@ return {
         { "<leader>fs", function()
             require("telescope.builtin").grep_string({ search = vim.fn.input("Grep > ") })
         end, desc = "Grep String (literal)" },
+        { "<leader>fw", function()
+            require("telescope.builtin").grep_string()
+        end, desc = "Grep word under cursor" },
+        { "<leader>fW", function()
+            require("telescope.builtin").live_grep({ default_text = vim.fn.expand("<cword>") })
+        end, desc = "Live Grep (pre-filled with word)" },
         { "<leader><leader>", "<cmd>Telescope buffers<cr>", desc = "Switch Buffers" },
         { "<C-e>", "<cmd>Telescope oldfiles<cr>", desc = "Recent Files" },
     },
